@@ -53,8 +53,8 @@ class Post(models.Model):
         self.post_rate -= 1
         self.save()
 
-    def preview(self):
-        return self.content[:125]
+    def __str__(self):
+        return f'{self.title}: {self.content[:20]}'
 
 
 class PostCategory(models.Model):
