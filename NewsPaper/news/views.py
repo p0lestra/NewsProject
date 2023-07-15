@@ -82,8 +82,8 @@ class NewsCreate(CreateView):
 
     def form_valid(self, form):
         post = form.save(commit=False)
-        if self.request.path == 'article/create/':
-            post.post_category.name = 'A'
+        if self.request.path == '/posts/article/create/':
+            post.category = 'A'
         post.save()
         return super().form_valid(form)
 
