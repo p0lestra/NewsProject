@@ -10,13 +10,12 @@ Search
         {{ filterset.form.as_p }}
         <input type="submit" value="Найти"/>
     </form>
-    {% for post in search %}
+    {% for post in post_search %}
      <div>
-     {{ post.author }}
+     {{ post.author.user.username }}
      {{ post.title }}
      {{ post.date_created|date:'d.m.Y' }}
      {{ post.content|truncatechars:20 }}
-     {{ post.get_post_kind_display }}
      </div>
     {% endfor %}
 {% endblock content %}

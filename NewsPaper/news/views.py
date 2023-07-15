@@ -1,6 +1,8 @@
-from django.views.generic import ListView, DetailView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
 from .models import Post
 from .filters import PostFilter
+from .forms import PostForm
 
 
 class PostsList(ListView):
@@ -69,3 +71,37 @@ class NewsSearch(ListView):
         # Добавляем в контекст объект фильтрации.
         context['filterset'] = self.filterset
         return context
+
+
+class NewsCreate(CreateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_create.html'
+    context_object_name = 'post_create'
+    success_url = '/posts/'
+
+    def form_valid(self, form):
+        post = form.save(commit=False)
+        if self.request.path == 'article/create/':
+            post.post_category.name = 'A'
+        post.save()
+        return super().form_valid(form)
+
+
+class NewsDelete(DeleteView):
+    model = Post
+    template_name = 'post_delete.html'
+    context_object_name = 'post_delete'
+    success_url = reverse_lazy('posts')
+
+
+class NewsUpdate(UpdateView):
+    form_class = PostForm
+    model = Post
+    template_name = 'post_update.html'
+    context_object_name = 'post_update'
+    success_url = reverse_lazy('posts')
+
+    def get_object(self, **kwargs):
+        id = self.kwargs.get('pk')
+        return Post.objects.get(pk=id)
