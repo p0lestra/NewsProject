@@ -8,6 +8,10 @@ Posts
 {% block content %}
    <h1>Все новости</h1>
    <h3>Количество новостей : {{ posts|lenght }}</h3>
+   <h4>Добро пожаловать, {{ request.user }}</h4>
+    {% if is_not_author %}
+    <button> <a href="upgrade/"> Хочу стать автором!</a> </button>
+    {% endif %}
    <hr>
    {% if posts %}
        <table>
@@ -20,7 +24,6 @@ Posts
 
            {% for post in posts %}
            <tr>
-               <td>{{ post.category }}</td>
                <td>{{ post.title|censor }}</td>
                <td>{{ post.date_created|date:'d M Y' }}</td>>
                <td>{{ post.content|truncatewords:20|censor }}</td>
