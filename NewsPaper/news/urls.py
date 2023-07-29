@@ -1,6 +1,7 @@
 from django.urls import path
 # Импортируем созданные нами представления
-from .views import PostsList, PostDetail, NewsSearch, NewsCreate, NewsDelete, NewsUpdate, logout_user, upgrade_me
+from .views import PostsList, PostDetail, NewsSearch, NewsCreate, NewsDelete, NewsUpdate, logout_user, upgrade_me, \
+    CategoryList
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
@@ -13,4 +14,5 @@ urlpatterns = [
     path('article/create/', NewsCreate.as_view()),
     path('logout/', logout_user, name='logout_user'),
     path('upgrade/', upgrade_me, name='upgrade'),
+    path('categories/<int:pk>/', CategoryList.as_view(), name='category_list')
 ]

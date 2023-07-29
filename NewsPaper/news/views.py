@@ -4,7 +4,7 @@ from django.views.generic import ListView, DetailView, CreateView, DeleteView, U
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth import logout
 from django.contrib.auth.models import Group
-from .models import Post
+from .models import Post, Category
 from .filters import PostFilter
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
@@ -101,6 +101,18 @@ class NewsUpdate(PermissionRequiredMixin, UpdateView):
     def get_object(self, **kwargs):
         id = self.kwargs.get('pk')
         return Post.objects.get(pk=id)
+
+
+class CategoryList(LoginRequiredMixin, ListView):
+    model = Post
+    ordering = '-date_created'
+    template_name = 'posts.html'
+    context_object_name = 'posts'
+    paginate_by = 10
+
+    def get_queryset(self):
+        self.queryset = Category.objects.get(pk=self.kwargs['pk']).post_set.all()
+        return super().get_queryset()
 
 
 def logout_user(request):
