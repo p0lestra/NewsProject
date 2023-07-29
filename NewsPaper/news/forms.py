@@ -7,7 +7,7 @@ from django.contrib.auth.models import Group
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['post_author', 'title', 'content']
+        fields = ['post_author', 'post_category', 'title', 'content']
 
 
 class BasicSignupForm(SignupForm):

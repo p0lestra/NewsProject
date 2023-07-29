@@ -12,6 +12,9 @@ Posts
     {% if is_not_author %}
     <button> <a href="upgrade/"> Хочу стать автором!</a> </button>
     {% endif %}
+    {% if is_not_sunscriber %}
+    <button> <a href="{% url 'subscribe' post.post_category.id %}"> Подписаться</a> </button>
+    {% endif %}
    <hr>
    {% if posts %}
        <table>
@@ -26,7 +29,11 @@ Posts
            {% for post in posts %}
            <tr>
                <td>{{ post.title|censor }}</td>
-               <td><a href="{% url 'category_list' post.category.id %}">{{ post.category }}</a></td>
+               <td>
+                   {% for cat in post.post_category.all %}
+                   <a href="{% url 'category_list' cat.id %}">{{ cat }}</a>
+                   {% endfor %}
+               </td>
                <td>{{ post.date_created|date:'d M Y' }}</td>>
                <td>{{ post.content|truncatewords:20|censor }}</td>
                <td>{{ post.post_rate|censor }}</td>

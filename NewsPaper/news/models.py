@@ -23,9 +23,16 @@ class Author(models.Model):
         self.user_rate = result_sum_rating * 3 + result_sum_comment_rating
         self.save()
 
+    def __str__(self):
+        return self.author.username
+
 
 class Category(models.Model):
     article_category = models.CharField(max_length=255, unique=True)
+    subscribers = models.ManyToManyField(User, name='categories')
+
+    def __str__(self):
+        return self.article_category
 
 
 class Post(models.Model):
