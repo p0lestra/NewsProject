@@ -111,12 +111,15 @@ class CategoryList(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        self.queryset = Category.objects.get(pk=self.kwargs['pk']).post_set.all()
-        return super().get_queryset()
+        self.post_category = Category.objects.get(pk=self.kwargs['pk'])
+        queryset = Post.objects.filter(post_category=self.post_category)
+        return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['is_not_subscriber'] = self.request.user not in Category.subscribers.all()
+        category = get_object_or_404(Category, id=self.kwargs['pk'])
+        context['is_not_subscriber'] = self.request.user not in category.subscribers.all()
+        context['category'] = category
         return context
 
 
@@ -138,3 +141,4 @@ def subscribe(request, pk):
     user = request.user
     category = Category.objects.get(id=pk)
     category.subscribers.add(user)
+    return redirect('/posts/categories/'+str(pk)+'/')

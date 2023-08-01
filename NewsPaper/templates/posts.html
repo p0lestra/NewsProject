@@ -12,8 +12,8 @@ Posts
     {% if is_not_author %}
     <button> <a href="upgrade/"> Хочу стать автором!</a> </button>
     {% endif %}
-    {% if is_not_sunscriber %}
-    <button> <a href="{% url 'subscribe' post.post_category.id %}"> Подписаться</a> </button>
+    {% if is_not_subscriber %}
+    <button> <a href="{% url 'subscribe' category.id %}"> Подписаться</a> </button>
     {% endif %}
    <hr>
    {% if posts %}
