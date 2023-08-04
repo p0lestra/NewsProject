@@ -78,12 +78,10 @@ TEMPLATES = [
     },
 ]
 
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
 
 WSGI_APPLICATION = 'NewsPaper.wsgi.application'
 
@@ -153,9 +151,13 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 ACCOUNT_FORMS = {'signup': 'news.forms.BasicSignupForm'}
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'Polestra1'
-EMAIL_HOST_PASSWORD = '15092008'
+EMAIL_HOST_USER = 'Polestra1@yandex.ru'
+EMAIL_HOST_PASSWORD = 'lpikiflcgrxymfmn'
 EMAIL_USE_SSL = True
-DEFAULT_FROM_EMAIL = 'Polestra1@yandex.ru'
+
+EMAIL_SERVER = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_ADMIN = EMAIL_HOST_USER

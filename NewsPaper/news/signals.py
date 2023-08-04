@@ -3,13 +3,13 @@ from django.dispatch import receiver
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 
-from NewsPaper.NewsPaper import settings
-from NewsPaper.news.models import PostCategory
+from NewsPaper import settings
+from news.models import PostCategory
 
 
 def send_notifications(preview, pk, title, subscribers):
     html_context = render_to_string(
-        'post_created_mail.html',
+        'post_created_email.html',
         {
             'text': preview,
             'link': f'{settings.SITE_URL}/posts/categories/{pk}'
@@ -35,6 +35,6 @@ def notify_about_new_post(sender, instance, **kwargs):
         for category in categories:
             subscribers += category.subscribers.all()
 
-        subscribers = [s.email for s in subscribers]
+        subscribers_emails = [s.email for s in subscribers]
 
-        send_notifications(instance.preview(), instance.pk, subscribers)
+        send_notifications(instance.preview(), instance.pk, subscribers_emails)
