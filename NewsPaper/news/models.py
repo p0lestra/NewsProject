@@ -28,15 +28,20 @@ class Author(models.Model):
 
 class Category(models.Model):
     article_category = models.CharField(max_length=255, unique=True)
-    subscribers = models.ManyToManyField(User, related_name='categories')
+    subscribers = models.ManyToManyField(User, through='CategorySubscriber')
 
     def __str__(self):
         return self.article_category
 
 
+class CategorySubscriber(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    subscriber = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
 class Post(models.Model):
     post_author = models.ForeignKey(Author, on_delete=models.CASCADE)
-    post_category = models.ManyToManyField(Category)
+    post_category = models.ManyToManyField(Category, through='PostCategory')
 
     article = 'A'
     news = 'N'
@@ -60,15 +65,18 @@ class Post(models.Model):
         self.save()
 
     def preview(self):
-        preview = f'{self.content[:100]} ...'
+        return f'{self.content[:50]} ...'
+
+    def get_absolute_id(self):
+        return f'{self.id}'
 
     def __str__(self):
         return f'{self.title}: {self.content[:20]}'
 
 
 class PostCategory(models.Model):
-    post_category = models.ForeignKey(Post, on_delete=models.CASCADE)
-    category_category = models.ManyToManyField(Category)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
 
 class Comment(models.Model):
