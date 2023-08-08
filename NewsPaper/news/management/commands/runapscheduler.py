@@ -22,27 +22,28 @@ def my_job():
     start_date = datetime.datetime.today() - datetime.timedelta(days=6)
     this_weeks_posts = Post.objects.filter(date_created__gt=start_date)
     for cat in Category.objects.all():
-        post_list = this_weeks_posts.filter(category=cat)
+        post_list = this_weeks_posts.filter(post_category=cat)
         if post_list:
             subscribers = cat.subscribers.values('username', 'email')
             recipients = []
             for sub in subscribers:
-                print('Hello')
                 recipients.append(sub['email'])
-                html_content = render_to_string(
-                    'daily_post.html', {
-                        'link': NewsPaper.settings.SITE_URL + 'posts/',
-                        'posts': this_weeks_posts.filter(category=cat),
-                    }
-                )
-                msg = EmailMultiAlternatives(
-                    subject=f'{cat.article_category}: Посты за прошедшую неделю',
-                    body="---------",
-                    from_email=NewsPaper.settings.DEFAULT_FROM_EMAIL,
-                    to=recipients
-                )
-                msg.attach_alternative(html_content, 'text/html')
-                msg.send()
+
+            html_content = render_to_string(
+                'daily_post.html', {
+                    'link': NewsPaper.settings.SITE_URL + 'posts/',
+                    'posts': post_list,
+                }
+            )
+            msg = EmailMultiAlternatives(
+                subject=f'Категория - {cat.article_category}',
+                body="---------",
+                from_email=NewsPaper.settings.DEFAULT_FROM_EMAIL,
+                to=recipients
+            )
+            msg.attach_alternative(html_content, 'text/html')
+            msg.send()
+    print('рассылка произведена')
 
 
 # функция, которая будет удалять неактуальные задачи
@@ -61,7 +62,9 @@ class Command(BaseCommand):
         # добавляем работу нашему задачнику
         scheduler.add_job(
             my_job,
-            trigger=CronTrigger(second="*/10"),
+            trigger=CronTrigger(
+                day_of_week='mon', hour='00', minute='00'
+            ),
             # То же, что и интервал, но задача тригера таким образом более понятна django
             id="my_job",  # уникальный айди
             max_instances=1,
