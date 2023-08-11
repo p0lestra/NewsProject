@@ -8,6 +8,7 @@ from .models import Post, Category, Author
 from .filters import PostFilter
 from .forms import PostForm
 from django.contrib.auth.decorators import login_required
+from .tasks import send_mail_subscriber
 
 
 class PostsList(LoginRequiredMixin, ListView):
@@ -79,6 +80,7 @@ class NewsCreate(PermissionRequiredMixin, CreateView):
         if self.request.path == '/posts/article/create/':
             post.category = 'A'
         post.save()
+        send_mail_subscriber.delay(post.pk)
         return super().form_valid(form)
 
 
